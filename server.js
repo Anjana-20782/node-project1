@@ -53,7 +53,44 @@ const server = http.createServer((req, res) => {
         if (req.url === "/signup") return serveView("signup.html", res);
     }
 
-   
+    if (req.method === "POST" && req.url === "/signup") {
+
+        let buffers = [];
+
+        req.on("data", (chunk) => {
+            buffers.push(chunk)
+            console.log(chunk);
+            
+        })
+
+        req.on("end", () => {
+
+            const raw = Buffer.concat(buffers).toString();
+
+            const data = JSON.parse(raw);
+
+            const { name, email, password, confirm } = data;
+
+            // if (password !== confirm) {
+            //     res.writeHead(400, { "Content-Type": "text/plain" });
+            //     return res.end("Passwords do not match");
+            // }
+
+            const user = {
+                name,
+                email,
+                password
+            };
+
+            signupEvent.emit("userSignup", user);
+
+            res.writeHead(200, { "Content-Type": "text/plain" });
+            res.end("Signup successful");
+
+        });
+    }
+
+});
 
 server.listen(3000, () => {
     console.log("\nServer running at http://localhost:3000");
