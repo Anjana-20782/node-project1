@@ -10,6 +10,16 @@ signupEvent.on("userSignup", (user) => {
     console.log("Name :", user.name);
     console.log("Email:", user.email);
     console.log("Password:", user.password);
+    fs.writeFileSync("user.txt",`user.name,user.email,user.password`,(err,data)=>{
+        if(err)
+        {
+            res.writeHead(500,{"content-type":"text/plain"})
+            res.end()
+        }else{
+            res.writeHead(200,{"content-type":"text/application"})
+            res.end(data)
+        }
+    })
 });
 
 const viewsDir = path.join(__dirname, "views");
