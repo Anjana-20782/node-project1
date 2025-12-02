@@ -23,7 +23,37 @@ function serveView(file, res) {
     });
 }
 
+function servePublic(file, res) {
 
+    const ext = path.extname(file);
+
+    let type = "text/plain";
+
+    if (ext === ".css") type = "text/css";
+    if (ext === ".js") type = "text/javascript";
+
+    fs.readFile(path.join(publicDir, file), (err, data) => {
+        if (err) return res.end("File missing");
+        res.writeHead(200, { "Content-Type": type });
+        res.end(data);
+    });
+}
+
+const server = http.createServer((req, res) => {
+
+    console.log(req.method, req.url);
+
+    if (req.url.startsWith("/public/")) {
+        return servePublic(req.url.replace("/public/", ""), res);
+    }
+
+    if (req.method === "GET") {
+        if (req.url === "/") return serveView("home.html", res);
+        if (req.url === "/login") return serveView("login.html", res);
+        if (req.url === "/signup") return serveView("signup.html", res);
+    }
+
+   
 
 server.listen(3000, () => {
     console.log("\nServer running at http://localhost:3000");
