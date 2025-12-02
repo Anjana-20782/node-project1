@@ -11,16 +11,6 @@ const signupEvent = new EventEmitter();
 //     console.log("Email:", user.email);
 //     console.log("Password:", user.password);
 
-    
-//     let users = [];
-//     if (fs.existsSync("user.json")) {
-//         users = JSON.parse(fs.readFileSync("user.json"));
-//     }
-//     users.push(user);
-//     fs.writeFileSync("user.json", JSON.stringify(users, null, 2));
-//     console.log("User saved:", user);
-
-
 //     // fs.writeFileSync("user.txt",`user.name,user.email,user.password`,(err,data)=>{
 //     fs.writeFileSync("user.json",JSON.stringify(user),(err,data)=>{
 //         if(err)
@@ -33,6 +23,9 @@ const signupEvent = new EventEmitter();
 //         }
 //     })
 // });
+
+
+   
 
 
 
@@ -96,6 +89,20 @@ const server = http.createServer((req, res) => {
         if (req.url === "/") return serveView("home.html", res);
         if (req.url === "/login") return serveView("login.html", res);
         if (req.url === "/signup") return serveView("signup.html", res);
+        if (req.url === "/display") return serveView("display.html", res);
+        if (req.url === "/users") {
+
+            let users = [];
+
+            if (fs.existsSync("users.json")) {
+                users = JSON.parse(
+                    fs.readFileSync("users.json", "utf-8") || "[]"
+                );
+            }
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify(users));
+        }
     }
 
     if (req.method === "POST" && req.url === "/signup") {
