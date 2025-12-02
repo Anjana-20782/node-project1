@@ -5,33 +5,57 @@ const EventEmitter = require("events");
 
 const signupEvent = new EventEmitter();
 
+// signupEvent.on("userSignup", (user) => {
+//     console.log("\nSIGNUP EVENT");
+//     console.log("Name :", user.name);
+//     console.log("Email:", user.email);
+//     console.log("Password:", user.password);
+
+    
+//     let users = [];
+//     if (fs.existsSync("user.json")) {
+//         users = JSON.parse(fs.readFileSync("user.json"));
+//     }
+//     users.push(user);
+//     fs.writeFileSync("user.json", JSON.stringify(users, null, 2));
+//     console.log("User saved:", user);
+
+
+//     // fs.writeFileSync("user.txt",`user.name,user.email,user.password`,(err,data)=>{
+//     fs.writeFileSync("user.json",JSON.stringify(user),(err,data)=>{
+//         if(err)
+//         {
+//             res.writeHead(500,{"content-type":"text/plain"})
+//             res.end()
+//         }else{
+//             res.writeHead(200,{"content-type":"text/application"})
+//             res.end(data)
+//         }
+//     })
+// });
+
+
+
 signupEvent.on("userSignup", (user) => {
     console.log("\nSIGNUP EVENT");
     console.log("Name :", user.name);
     console.log("Email:", user.email);
     console.log("Password:", user.password);
-    // fs.writeFileSync("user.txt",`user.name,user.email,user.password`,(err,data)=>{
-    //     if(err)
-    //     {
-    //         res.writeHead(500,{"content-type":"text/plain"})
-    //         res.end()
-    //     }else{
-    //         res.writeHead(200,{"content-type":"text/application"})
-    //         res.end(data)
-    //     }
-    // })
 
-    fs.writeFileSync("user.json",JSON.stringify(user),(err,data)=>{
-        if(err)
+    
+    let users = [];
+    if (fs.existsSync("users.json")) {
+        const data=fs.readFileSync("users.json","utf-8")
+        if(data)
         {
-            res.writeHead(500,{"content-type":"text/plain"})
-            res.end()
-        }else{
-            res.writeHead(200,{"content-type":"text/application"})
-            res.end(data)
+            users=JSON.parse(data);
         }
-    })
+    }
+    users.push(user);
+    fs.writeFileSync("users.json", JSON.stringify(users, null, 2));
+    console.log("User saved:", user);
 });
+
 
 const viewsDir = path.join(__dirname, "views");
 const publicDir = path.join(__dirname, "public");
@@ -91,11 +115,6 @@ const server = http.createServer((req, res) => {
             const data = JSON.parse(raw);
 
             const { name, email, password, confirm } = data;
-
-            // if (password !== confirm) {
-            //     res.writeHead(400, { "Content-Type": "text/plain" });
-            //     return res.end("Passwords do not match");
-            // }
 
             const user = {
                 name,
