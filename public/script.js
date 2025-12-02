@@ -19,4 +19,27 @@ if (form) {
         }
 
         let formData={name,email,password,confirm}
-       
+        try {
+            const res = await fetch("/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await res.text();
+
+            msg.style.color = "green";
+            msg.innerHTML = data;
+
+            form.reset();
+
+        } catch (err) {
+            msg.style.color = "red";
+            msg.innerText = "Server Error";
+        }
+
+    });
+
+}
